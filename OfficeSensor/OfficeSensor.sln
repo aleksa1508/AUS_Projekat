@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36310.24 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeSensor", "OfficeSensor\OfficeSensor.csproj", "{4A4DE7C9-D681-4DF3-9DD2-A6929AA398E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{89551DFD-7FB1-4E20-835A-25A7719DFD57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{34FDA56C-3790-4A01-835C-7E774882B99E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A4DE7C9-D681-4DF3-9DD2-A6929AA398E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A4DE7C9-D681-4DF3-9DD2-A6929AA398E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A4DE7C9-D681-4DF3-9DD2-A6929AA398E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A4DE7C9-D681-4DF3-9DD2-A6929AA398E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89551DFD-7FB1-4E20-835A-25A7719DFD57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89551DFD-7FB1-4E20-835A-25A7719DFD57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89551DFD-7FB1-4E20-835A-25A7719DFD57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89551DFD-7FB1-4E20-835A-25A7719DFD57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34FDA56C-3790-4A01-835C-7E774882B99E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34FDA56C-3790-4A01-835C-7E774882B99E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34FDA56C-3790-4A01-835C-7E774882B99E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34FDA56C-3790-4A01-835C-7E774882B99E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0FC7BA76-D137-4A09-A14B-C69FF7BBCE0B}
+	EndGlobalSection
+EndGlobal

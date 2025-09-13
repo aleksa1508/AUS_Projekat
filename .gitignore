@@ -6,3 +6,6 @@
 /OfficeSensor/.vs/OfficeSensor
 /OfficeSensor/Common/obj/Debug
 /OfficeSensor/Service/obj/Debug
+/OfficeSensor/Service/bin/Debug
+/OfficeSensor/OfficeSensor/bin/Debug
+/OfficeSensor/Common/bin/Debug

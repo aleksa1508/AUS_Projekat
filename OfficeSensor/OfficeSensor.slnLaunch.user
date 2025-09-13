@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "OfficeSensor\\OfficeSensor.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Service\\Service.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

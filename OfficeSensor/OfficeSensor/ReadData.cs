@@ -17,7 +17,7 @@ namespace OfficeSensor
             _reader = new StreamReader(csvFilePath);
         }
 
-        public List<SensorSample> Reader(string logFilePath, int maxRows = 100)
+        public List<SensorSample> Reader(int maxRows)
         {
             if (_disposed)
                 throw new ObjectDisposedException(nameof(ReadData));

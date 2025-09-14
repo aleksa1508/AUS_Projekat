@@ -2,6 +2,7 @@
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -17,28 +18,29 @@ namespace OfficeSensor
     {
         static void Main(string[] args)
         {
-            NetTcpBinding binding = new NetTcpBinding
+           /* NetTcpBinding binding = new NetTcpBinding
             {
                 TransferMode = TransferMode.Streamed,
                 MaxReceivedMessageSize = 65536
             };
 
-            EndpointAddress address = new EndpointAddress("net.tcp://localhost:4000/SensorService");
+            EndpointAddress address = new EndpointAddress("net.tcp://localhost:4000/SensorService");*/
 
-            ChannelFactory<ISensor> factory = new ChannelFactory<ISensor>(binding, address);
+            ChannelFactory<ISensor> factory = new ChannelFactory<ISensor>("SensorService");
             ISensor proxy = factory.CreateChannel();
 
             string exeDir = AppDomain.CurrentDomain.BaseDirectory;
-
-            // Relativna putanja do CSV fajla unutar projekta
+            var fileDirectoryPath = ConfigurationManager.AppSettings["path"];
+            var rows = Int32.Parse(ConfigurationManager.AppSettings["maxRows"]);
+            /*// Relativna putanja do CSV fajla unutar projekta
             string csvFilePath = Path.Combine(exeDir, "Data.csv");
-
+            Console.WriteLine(fileDirectoryPath);
             // Primer upotrebe sa tvojom funkcijom Reader
-            string logFilePath = Path.Combine(exeDir, "log.txt");
-            if (!File.Exists(csvFilePath))
-                throw new FileNotFoundException($" {csvFilePath} fajl nije pronađen:");
-           var readData = new ReadData(csvFilePath);
-           var lista=readData.Reader(logFilePath, 100);
+            string logFilePath = Path.Combine(exeDir, "log.txt");*/
+            if (!File.Exists(fileDirectoryPath))
+                throw new FileNotFoundException($" {fileDirectoryPath} fajl nije pronađen:");
+           var readData = new ReadData(fileDirectoryPath);
+           var lista=readData.Reader(rows);
             Console.WriteLine($"Učitano je {lista.Count} redova iz csv fajla.");
 
             var meta=new SessionMetaData
@@ -50,6 +52,9 @@ namespace OfficeSensor
                 DateTime = lista[0].DateTime,
             };
             Console.WriteLine("Pokrenuta sesija!");
+            try
+            {
+            
                 var sensorService = proxy.StartStession(meta);
 
                 if (sensorService.ServiceType == ServiceType.NACK)
@@ -57,6 +62,19 @@ namespace OfficeSensor
                     Console.WriteLine($"{sensorService.ServiceType} ");
                     return;
                 }
+
+            }
+            catch (FaultException<ValidationFault> ex)
+            {
+                Console.WriteLine($"Validacijska greska pri pokretanju: {ex.Detail.Message}");
+                return;
+            }
+            catch (FaultException<DataFormatFault> ex)
+            {
+                Console.WriteLine($"Format greška pri pokretanju: {ex.Detail.Message}");
+                Console.WriteLine($"Detalji: {ex.Detail.Details}");
+                return;
+            }
             int i = 0;
             foreach (var sensor in lista)
             {
@@ -65,7 +83,7 @@ namespace OfficeSensor
                    
                     var response = proxy.PushSample(sensor);
 
-                    if (response.ServiceType == ServiceType.ACK)
+                    if (response.ServiceType == ServiceType.ACK) 
                         Console.WriteLine($"{++i} -> Uzorak uspesno obradjen: {response.Message}");
                     else
                         Console.WriteLine($"{++i}-> Uzorak odbijen zbog ne validnih podataka: {response.Message}");

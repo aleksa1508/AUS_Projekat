@@ -12,17 +12,23 @@ namespace Service
     {
         static void Main(string[] args)
         {
-            Uri baseAddress = new Uri("net.tcp://localhost:4000/SensorService");
-            ServiceHost host = new ServiceHost(typeof(SensorService), baseAddress);
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            //Uri baseAddress = new Uri("net.tcp://localhost:4000/SensorService");
+            SensorService sensorService = new SensorService();
+            EventSubscriber eventSubscriber = new EventSubscriber(sensorService);
+           
+            ServiceHost host = new ServiceHost(sensorService);
 
-            NetTcpBinding binding = new NetTcpBinding
+           /* NetTcpBinding binding = new NetTcpBinding
             {
                 TransferMode = TransferMode.Streamed,
                 MaxReceivedMessageSize = 65536
             };
+
+            */
             try
             {
-                host.AddServiceEndpoint(typeof(ISensor), binding, "");
+               //host.AddServiceEndpoint(typeof(ISensor), binding, "");
                 host.Open();
                 Console.WriteLine("Servis pokrenut na net.tcp://localhost:4000/SensorService");
                 Console.WriteLine("Pritisnite neki taster za zatvaranje");
@@ -32,8 +38,8 @@ namespace Service
             {
                 Console.WriteLine($"Greska pri pokretanju servisa: {ex.Message}");
             }
-
             host.Close();
+            eventSubscriber.CloseEvents(sensorService);
 
         }
     }

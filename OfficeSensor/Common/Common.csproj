@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataFormatFault.cs" />
+    <Compile Include="Events.cs" />
     <Compile Include="ISensor.cs" />
     <Compile Include="SensorSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

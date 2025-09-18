@@ -41,8 +41,9 @@ namespace OfficeSensor
                 throw new FileNotFoundException($" {fileDirectoryPath} fajl nije pronađen:");
            var readData = new ReadData(fileDirectoryPath);
            var lista=readData.Reader(rows);
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"Učitano je {lista.Count} redova iz csv fajla.");
-
+            Console.ResetColor();
             var meta=new SessionMetaData
             {
                 Volume = lista[0].Volume,
@@ -66,13 +67,17 @@ namespace OfficeSensor
             }
             catch (FaultException<ValidationFault> ex)
             {
+                Console.ForegroundColor= ConsoleColor.Red;
                 Console.WriteLine($"Validacijska greska pri pokretanju: {ex.Detail.Message}");
+                Console.ResetColor();
                 return;
             }
             catch (FaultException<DataFormatFault> ex)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"Format greška pri pokretanju: {ex.Detail.Message}");
                 Console.WriteLine($"Detalji: {ex.Detail.Details}");
+                Console.ResetColor();
                 return;
             }
             int i = 0;
@@ -80,18 +85,28 @@ namespace OfficeSensor
             {
                 try
                 {
-                   
+
                     var response = proxy.PushSample(sensor);
 
-                    if (response.ServiceType == ServiceType.ACK) 
+                    if (response.ServiceType == ServiceType.ACK)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"{++i} -> Uzorak uspesno obradjen: {response.Message}");
+                        Console.ResetColor();
+                    }
                     else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine($"{++i}-> Uzorak odbijen zbog ne validnih podataka: {response.Message}");
+                        Console.ResetColor();
+                    }
                 }
-                
+
                 catch (FaultException ex)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"[NEOCEKIVANA WCF GRESKA] {i}: {ex.Message}");
+                    Console.ResetColor();
                 }
 
                 Thread.Sleep(100);
@@ -101,11 +116,15 @@ namespace OfficeSensor
 
             if (finallyResponse.ServiceType == ServiceType.ACK)
             {
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"[KRAJ] Sesija je zatvorena");
+                Console.ResetColor();
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"[GRESKA END SESSION]{finallyResponse.Message}");
+                Console.ResetColor();
             }
         }
     }

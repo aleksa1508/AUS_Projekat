@@ -98,7 +98,7 @@ namespace Service
                 if (Math.Abs(deltaL) > L_threshold)
                 {
                     string direction = deltaL > 0 ? "iznad očekivanog" : "ispod očekivanog";
-                    OnPressureSpike?.Invoke(this, new SpikeEventArgs($"[Pressure Spike]: ΔL={deltaL:F2}, smer: {direction}"));
+                    OnPressureSpike?.Invoke(this, new SpikeEventArgs($" ΔL={deltaL:F2}, smer: {direction}"));
                 }
 
                 double deltaAQ = aq - previousSample.AirQuality;
@@ -189,13 +189,15 @@ namespace Service
                 measurementsWriter.Flush();
 
                 ReceiveSample(sample.Volume, sample.RelativeHumidity, sample.AirQuality, sample.LightLevel);
-
+                
                 return new ServiceResponse
                 {
                     ServiceType = ServiceType.ACK,
                     ServiceStatus = ServiceStatus.IN_PROGRESS,
+                    
                     Message = "Uzorak uspesno primljen"
                 };
+                
             }
             catch (FaultException<ValidationFault> ex)
             {

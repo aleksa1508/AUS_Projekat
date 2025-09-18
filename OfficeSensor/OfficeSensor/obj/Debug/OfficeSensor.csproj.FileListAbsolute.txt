@@ -10,3 +10,14 @@ C:\Users\Dell 3520\Desktop\AA\Virtuelizacija\Kancelarijski senzor\OfficeSensor\O
 C:\Users\Dell 3520\Desktop\AA\Virtuelizacija\Kancelarijski senzor\OfficeSensor\OfficeSensor\obj\Debug\OfficeSensor.exe
 C:\Users\Dell 3520\Desktop\AA\Virtuelizacija\Kancelarijski senzor\OfficeSensor\OfficeSensor\obj\Debug\OfficeSensor.pdb
 C:\Users\Dell 3520\Desktop\AA\Virtuelizacija\Kancelarijski senzor\OfficeSensor\OfficeSensor\obj\Debug\OfficeSensor.exe.config
+D:\VIRT\OfficeSensor\OfficeSensor\bin\Debug\Data.csv
+D:\VIRT\OfficeSensor\OfficeSensor\bin\Debug\OfficeSensor.exe.config
+D:\VIRT\OfficeSensor\OfficeSensor\bin\Debug\OfficeSensor.exe
+D:\VIRT\OfficeSensor\OfficeSensor\bin\Debug\OfficeSensor.pdb
+D:\VIRT\OfficeSensor\OfficeSensor\bin\Debug\Common.dll
+D:\VIRT\OfficeSensor\OfficeSensor\bin\Debug\Common.pdb
+D:\VIRT\OfficeSensor\OfficeSensor\obj\Debug\OfficeSensor.csproj.AssemblyReference.cache
+D:\VIRT\OfficeSensor\OfficeSensor\obj\Debug\OfficeSensor.csproj.CoreCompileInputs.cache
+D:\VIRT\OfficeSensor\OfficeSensor\obj\Debug\OfficeSe.BE0467A3.Up2Date
+D:\VIRT\OfficeSensor\OfficeSensor\obj\Debug\OfficeSensor.exe
+D:\VIRT\OfficeSensor\OfficeSensor\obj\Debug\OfficeSensor.pdb

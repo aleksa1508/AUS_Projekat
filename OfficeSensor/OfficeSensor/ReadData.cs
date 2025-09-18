@@ -29,7 +29,9 @@ namespace OfficeSensor
             string headerLine = _reader.ReadLine();
             if (headerLine == null)
             {
+                Console.ForegroundColor=ConsoleColor.Red;
                 Console.WriteLine("CSV je prazan!");
+                Console.ResetColor();
                 return sensorSampleList;
             }
 

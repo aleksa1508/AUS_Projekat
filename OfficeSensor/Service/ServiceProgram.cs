@@ -30,9 +30,11 @@ namespace Service
             {
                //host.AddServiceEndpoint(typeof(ISensor), binding, "");
                 host.Open();
+                Console.ForegroundColor=ConsoleColor.Magenta;
                 Console.WriteLine("Servis pokrenut na net.tcp://localhost:4000/SensorService");
                 Console.WriteLine("Pritisnite neki taster za zatvaranje");
                 Console.ReadKey();
+                Console.ResetColor();
             }
             catch (Exception ex)
             {

@@ -21,10 +21,10 @@ namespace Service
             sensorService.OnSampleReceived += HandleSampleReceived;
             sensorService.OnWarningRaised += HandleWarningRaised;
             sensorService.OnTransferCompleted += HandleTransferCompleted;
-            sensorService.OnPressureSpike += HandlePressureSpike;
+            /*sensorService.OnPressureSpike += HandlePressureSpike;
             sensorService.OnAQSpike += HandleAQSpike;
             sensorService.OnRHSpike += HandleRHSpike;
-            sensorService.OnOutOfBoundWarning += HandleOnOutOfBoundWarning;
+            sensorService.OnOutOfBoundWarning += HandleOnOutOfBoundWarning;*/
         }
 
         // Handler metode
@@ -48,7 +48,7 @@ namespace Service
         private void HandleWarningRaised(object sender, WarningEventArgs e)
         {
             Console.ForegroundColor= ConsoleColor.Red;
-            Console.WriteLine($"⚠️ WARNING: {e.Warning}");
+            Console.WriteLine($"⚠️ WARNING:\n {e.Warning}");
             Console.ResetColor();
             Console.WriteLine();
         }
@@ -60,7 +60,7 @@ namespace Service
             Console.ResetColor();
             Console.WriteLine();
         }
-        private void HandleAQSpike(object sender, SpikeEventArgs e)
+       /* private void HandleAQSpike(object sender, SpikeEventArgs e)
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine($"[AQ SPIKE]: {e.Warning}");
@@ -88,7 +88,7 @@ namespace Service
             Console.ResetColor();
             Console.WriteLine();
         }
-
+       */
         public void CloseEvents(SensorService sensorService)
         {
             if (sensorService != null)

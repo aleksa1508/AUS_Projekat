@@ -47,7 +47,7 @@ namespace Common
             Warning = warning;
         }
     }
-    [DataContract]
+   /* [DataContract]
     public class OutOfBoundWarningEventArgs : EventArgs
     {
         [DataMember]
@@ -66,5 +66,5 @@ namespace Common
         {
             Warning = warning;
         }
-    }
+    }*/
 }

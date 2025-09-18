@@ -20,18 +20,18 @@ namespace Service
         public delegate void TransferEventHandler(object sender, TransferEventArgs e);
         public delegate void SampleEventHandler(object sender, SampleEventArgs e);
         public delegate void WarningEventHandler(object sender, WarningEventArgs e);
-        public delegate void OutOfBoundWarningEventHandler(object sender, OutOfBoundWarningEventArgs e);
-        public delegate void SpikeEventHandler(object sender, SpikeEventArgs e);
+       /* public delegate void OutOfBoundWarningEventHandler(object sender, OutOfBoundWarningEventArgs e);
+        public delegate void SpikeEventHandler(object sender, SpikeEventArgs e);*/
 
         // Događaji
         public event TransferEventHandler OnTransferStarted;
         public event SampleEventHandler OnSampleReceived;
         public event TransferEventHandler OnTransferCompleted;
         public event WarningEventHandler OnWarningRaised;
-        public event OutOfBoundWarningEventHandler OnOutOfBoundWarning;
+        /*public event OutOfBoundWarningEventHandler OnOutOfBoundWarning;
         public event SpikeEventHandler OnPressureSpike;
         public event SpikeEventHandler OnAQSpike;
-        public event SpikeEventHandler OnRHSpike;
+        public event SpikeEventHandler OnRHSpike;*/
 
         private List<double> humiditySamples = new List<double>();
         private List<double> lightSamples = new List<double>();
@@ -98,7 +98,8 @@ namespace Service
                 if (Math.Abs(deltaL) > L_threshold)
                 {
                     string direction = deltaL > 0 ? "iznad očekivanog" : "ispod očekivanog";
-                    OnPressureSpike?.Invoke(this, new SpikeEventArgs($" ΔL={deltaL:F2}, smer: {direction}"));
+                    OnWarningRaised?.Invoke(this, new WarningEventArgs($"[PRESSURE SPIKE]:\t ΔL={deltaL:F2}, smer: {direction}"));
+                   // OnPressureSpike?.Invoke(this, new SpikeEventArgs($" ΔL={deltaL:F2}, smer: {direction}"));
                 }
 
                 double deltaAQ = aq - previousSample.AirQuality;
@@ -106,14 +107,16 @@ namespace Service
                 if (Math.Abs(deltaAQ) > AQ_threshold)
                 {
                     string direction = deltaAQ > 0 ? "iznad očekivanog" : "ispod očekivanog";
-                    OnAQSpike?.Invoke(this, new SpikeEventArgs($"[AQ Spike]: ΔAQ={deltaAQ:F2}, smer: {direction}"));
+                    OnWarningRaised?.Invoke(this, new WarningEventArgs($"[AQ SPIKE]:\t ΔAQ={deltaAQ:F2}, smer: {direction}"));
+                  //  OnAQSpike?.Invoke(this, new SpikeEventArgs($"[AQ Spike]: ΔAQ={deltaAQ:F2}, smer: {direction}"));
                 }
                 double deltaRH = rh - previousSample.RelativeHumidity;
                 //                Console.WriteLine($"LIGHT NOW {light} AND PREVIOUS LIGHT LEVEL {previousSample.LightLevel}  ->{deltaL}  {L_threshold}");
                 if (Math.Abs(deltaRH) > RH_threshold)
                 {
                     string direction = deltaRH > 0 ? "iznad očekivanog" : "ispod očekivanog";
-                    OnRHSpike?.Invoke(this, new SpikeEventArgs($"[RH Spike]: ΔRH={deltaRH:F2}, smer: {direction}"));
+                    OnWarningRaised?.Invoke(this, new WarningEventArgs($"[RH SPIKE]:\t ΔRH={deltaRH:F2}, smer: {direction}"));
+                   // OnRHSpike?.Invoke(this, new SpikeEventArgs($"[RH Spike]: ΔRH={deltaRH:F2}, smer: {direction}"));
                 }
             }
 
@@ -126,7 +129,8 @@ namespace Service
             if (light < lowerBoundL || light > upperBoundL)
             {
                 string direction = light < lowerBoundL ? "ispod očekivane vrednosti" : "iznad očekivane vrednosti";
-                OnOutOfBoundWarning?.Invoke(this, new OutOfBoundWarningEventArgs($"OutOfBandWarning: L={light:F2}, Lmean={lMean:F2}, smer: {direction}"));
+                OnWarningRaised?.Invoke(this, new WarningEventArgs($"[OUT OF BOUND WARNING]:\t L={light:F2}, Lmean={lMean:F2}, smer: {direction}"));
+                //OnOutOfBoundWarning?.Invoke(this, new OutOfBoundWarningEventArgs($"OutOfBandWarning: L={light:F2}, Lmean={lMean:F2}, smer: {direction}"));
             }
 
             // --- Zapamti trenutni sample kao prethodni ---
@@ -152,7 +156,6 @@ namespace Service
                 sessionActive = false;
                 measurementsWriter?.Close();
                 rejestSampleWriter?.Close();
-
                 CompleteTransfer();
 
                 return new ServiceResponse
@@ -185,11 +188,14 @@ namespace Service
 
                 ValidateSensorSampleData(sample);
 
+                Console.WriteLine("[INFO] Prenos je u toku...");
+
                 measurementsWriter.WriteLine($"{sample.Volume},{sample.RelativeHumidity},{sample.AirQuality},{sample.LightLevel},{sample.DateTime}");
                 measurementsWriter.Flush();
 
                 ReceiveSample(sample.Volume, sample.RelativeHumidity, sample.AirQuality, sample.LightLevel);
-                
+                Console.WriteLine("[INFO] Zavrsen prenos...\n");
+
                 return new ServiceResponse
                 {
                     ServiceType = ServiceType.ACK,
@@ -202,7 +208,7 @@ namespace Service
             catch (FaultException<ValidationFault> ex)
             {
                 //WriteRejactSample(sample, ex.Detail.Message); // belezi u reject CSV
-                WarningRaise();
+                //WarningRaise();
                 return new ServiceResponse
                 {
                     ServiceType = ServiceType.NACK,
@@ -213,7 +219,7 @@ namespace Service
             catch (FaultException<DataFormatFault> ex)
             {
                 // WriteRejactSample(sample, ex.Detail.Message);
-                WarningRaise();
+                //WarningRaise();
                 return new ServiceResponse
                 {
                     ServiceType = ServiceType.NACK,
@@ -224,7 +230,7 @@ namespace Service
             catch (Exception ex)
             {
                 // WriteRejactSample(sample, ex.Message);
-                WarningRaise();
+                //WarningRaise();
                 return new ServiceResponse
                 {
                     ServiceType = ServiceType.NACK,
@@ -236,7 +242,6 @@ namespace Service
 
         public ServiceResponse StartStession(SessionMetaData metaData)
         {
-            Console.WriteLine($"STAAAAAAAAAAAAART");
             try
             {
                 Console.WriteLine($"Sesija je započeta");
@@ -250,17 +255,6 @@ namespace Service
                 measurementsWriter.WriteLine("Volume,RelativeHumidity,AirQuality,LightLevel,DateTime");
                 rejestSampleWriter.WriteLine("Volume,RelativeHumidity,AirQuality,LightLevel,DateTime,Reason rejact");
 
-                /* measurementsWriter = new StreamWriter(new FileStream(measurementsPath, FileMode.Create, FileAccess.Write, FileShare.Read))
-                 {
-                     AutoFlush = true
-                 };
-                 measurementsWriter.WriteLine("Volume,RelativeHumidity,AirQuality,LightLevel,DateTime");
-
-                 rejestSampleWriter = new StreamWriter(new FileStream(rejectsPath, FileMode.Create, FileAccess.Write, FileShare.Read))
-                 {
-                     AutoFlush = true
-                 };
-                 rejestSampleWriter.WriteLine("Volume,RelativeHumidity,AirQuality,LightLevel,DateTime,Reason");*/
 
                 StartTransfer();
 
@@ -330,18 +324,18 @@ namespace Service
             CheckFinity("AirQuality", sample.AirQuality, sample);
             CheckFinity("LightLevel", sample.LightLevel, sample);
 
-            // Provjera opsega
-            if (sample.Volume < 0 || sample.Volume > 1000)
-                throwValidationAndLog(sample, "Volume van dozvoljenog opsega (0-1000)");
+            // Provjera opsega mi smo svoje neke opsege stavili kako bi izbacili odredjene redove
+            if (sample.Volume < 0 || sample.Volume > 100)
+                throwValidationAndLog(sample, "Volume van dozvoljenog opsega (0-100)");
 
-            if (sample.RelativeHumidity <= 0 || sample.RelativeHumidity > 100)
-                throwValidationAndLog(sample, "RelativeHumidity van dozvoljenog opsega (0-100)");
+            if (sample.RelativeHumidity <=28.2 || sample.RelativeHumidity > 100)
+                throwValidationAndLog(sample, "RelativeHumidity van dozvoljenog opsega (28.2-100)");
 
-            if (sample.AirQuality < 0 || sample.AirQuality > 1000000)
-                throwValidationAndLog(sample, "AirQuality van dozvoljenog opsega (0-100000)");
+            if (sample.AirQuality < 25000 || sample.AirQuality > 50000)
+                throwValidationAndLog(sample, "AirQuality van dozvoljenog opsega (25000-50000)");
 
-            if (sample.LightLevel < 0 || sample.LightLevel > 10000000)
-                throwValidationAndLog(sample, "LightLevel van dozvoljenog opsega (0-1000000)");
+            if (sample.LightLevel < 200 || sample.LightLevel > 10300000)
+                throwValidationAndLog(sample, "LightLevel van dozvoljenog opsega (200-1030000)");
 
             if (sample.DateTime == default)
                 throwValidationAndLog(sample, "DateTime nije postavljen");

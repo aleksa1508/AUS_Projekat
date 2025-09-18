@@ -52,7 +52,7 @@ namespace OfficeSensor
                 LightLevel = lista[0].LightLevel,
                 DateTime = lista[0].DateTime,
             };
-            Console.WriteLine("Pokrenuta sesija!");
+            Console.WriteLine("[START] Pokrenuta sesija!");
             try
             {
             

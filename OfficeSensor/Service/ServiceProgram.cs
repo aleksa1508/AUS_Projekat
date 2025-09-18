@@ -19,13 +19,6 @@ namespace Service
            
             ServiceHost host = new ServiceHost(sensorService);
 
-           /* NetTcpBinding binding = new NetTcpBinding
-            {
-                TransferMode = TransferMode.Streamed,
-                MaxReceivedMessageSize = 65536
-            };
-
-            */
             try
             {
                //host.AddServiceEndpoint(typeof(ISensor), binding, "");

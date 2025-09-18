@@ -88,9 +88,9 @@ namespace OfficeSensor
             }
 
             // Upis nevalidnih redova u log fajl
-            /*if (invalidRows.Count > 0)
-                File.WriteAllLines(logFilePath, invalidRows);*/
-            Console.WriteLine($"{invalidRows.Count}");
+            if (invalidRows.Count > 0)
+                File.WriteAllLines("log.csv", invalidRows);
+            Console.WriteLine($"Invalid logs->{invalidRows.Count}");
             return sensorSampleList;
         }
 

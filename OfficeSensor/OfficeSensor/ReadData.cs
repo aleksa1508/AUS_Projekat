@@ -19,6 +19,7 @@ namespace OfficeSensor
 
         public List<SensorSample> Reader(int maxRows)
         {
+            //da li je objekat unisten ili ne
             if (_disposed)
                 throw new ObjectDisposedException(nameof(ReadData));
 
@@ -108,6 +109,7 @@ namespace OfficeSensor
                 if (disposing)
                 {
                     // Oslobađanje managed resursa
+                    _reader?.Close();
                     _reader?.Dispose();
                 }
 

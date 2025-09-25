@@ -13,7 +13,7 @@ namespace Common
         [OperationContract]
         [FaultContract(typeof(DataFormatFault))]
         [FaultContract(typeof(ValidationFault))]
-        ServiceResponse StartStession(SessionMetaData metaData);//dodati meta
+        ServiceResponse StartStession(SessionMetaData metaData);
         [OperationContract]
         [FaultContract(typeof(DataFormatFault))]
         [FaultContract(typeof(ValidationFault))]

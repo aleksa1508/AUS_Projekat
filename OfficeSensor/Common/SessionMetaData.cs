@@ -11,18 +11,18 @@ namespace Common
     public class SessionMetaData
     {
         [DataMember]
-        public double Volume { get; set; }
+        public string Volume { get; set; } = "Volume [mV]";
 
         [DataMember]
-        public double RelativeHumidity { get; set; }
+        public string RelativeHumidity { get; set; } = "RelativeHumidity [%]";
 
         [DataMember]
-        public double AirQuality { get; set; }
+        public string AirQuality { get; set; } = "AirQuality [Ohms]";
 
         [DataMember]
-        public double LightLevel { get; set; }
+        public string LightLevel { get; set; } = "LightLevel [Ohms]";
 
         [DataMember]
-        public DateTime DateTime { get; set; }
+        public string DateTime { get; set; } = "Date Time";
     }
 }

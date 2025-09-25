@@ -21,10 +21,7 @@ namespace Service
             sensorService.OnSampleReceived += HandleSampleReceived;
             sensorService.OnWarningRaised += HandleWarningRaised;
             sensorService.OnTransferCompleted += HandleTransferCompleted;
-            /*sensorService.OnPressureSpike += HandlePressureSpike;
-            sensorService.OnAQSpike += HandleAQSpike;
-            sensorService.OnRHSpike += HandleRHSpike;
-            sensorService.OnOutOfBoundWarning += HandleOnOutOfBoundWarning;*/
+  
         }
 
         // Handler metode

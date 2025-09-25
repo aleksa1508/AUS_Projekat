@@ -44,14 +44,7 @@ namespace OfficeSensor
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"Učitano je {lista.Count} redova iz csv fajla.");
             Console.ResetColor();
-            var meta=new SessionMetaData
-            {
-                Volume = lista[0].Volume,
-                RelativeHumidity = lista[0].RelativeHumidity,
-                AirQuality = lista[0].AirQuality,
-                LightLevel = lista[0].LightLevel,
-                DateTime = lista[0].DateTime,
-            };
+            var meta = new SessionMetaData();
             Console.WriteLine("[START] Pokrenuta sesija!");
             try
             {

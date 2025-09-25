@@ -70,26 +70,6 @@ namespace Service
             // Okidamo događaj da je sample primljen
             OnSampleReceived?.Invoke(this, new SampleEventArgs(volume, rh, aq, light));
 
-            // Logika provere pragova
-            /*if (aq > AQ_threshold)
-                OnWarningRaised?.Invoke(this, new WarningEventArgs($"AQ over threshold: {aq} > {AQ_threshold}"));
-
-            if (rh > RH_threshold)
-                OnWarningRaised?.Invoke(this, new WarningEventArgs($"RH over threshold: {rh} > {RH_threshold}"));
-
-            if (light > L_threshold)
-                OnWarningRaised?.Invoke(this, new WarningEventArgs($"Light over threshold: {light} > {L_threshold}"));
-            */
-            // Prosek RH i odstupanje ±25%
-            /*humiditySamples.Add(rh);
-            double avgRh = humiditySamples.Average();
-            double lowerBound = avgRh * 0.75;
-            double upperBound = avgRh * 1.25;
-
-            if (rh < lowerBound || rh > upperBound)
-                OnWarningRaised?.Invoke(this, new WarningEventArgs($"RH deviates ±25% from avg {avgRh:F2}: {rh}"));
-            */
-
             // --- ΔL za prethodni sample ---
             if (previousSample != null)
             {
@@ -108,15 +88,12 @@ namespace Service
                 {
                     string direction = deltaAQ > 0 ? "iznad očekivanog" : "ispod očekivanog";
                     OnWarningRaised?.Invoke(this, new WarningEventArgs($"[AQ SPIKE]:\t ΔAQ={deltaAQ:F2}, smer: {direction}"));
-                  //  OnAQSpike?.Invoke(this, new SpikeEventArgs($"[AQ Spike]: ΔAQ={deltaAQ:F2}, smer: {direction}"));
                 }
                 double deltaRH = rh - previousSample.RelativeHumidity;
-                //                Console.WriteLine($"LIGHT NOW {light} AND PREVIOUS LIGHT LEVEL {previousSample.LightLevel}  ->{deltaL}  {L_threshold}");
                 if (Math.Abs(deltaRH) > RH_threshold)
                 {
                     string direction = deltaRH > 0 ? "iznad očekivanog" : "ispod očekivanog";
                     OnWarningRaised?.Invoke(this, new WarningEventArgs($"[RH SPIKE]:\t ΔRH={deltaRH:F2}, smer: {direction}"));
-                   // OnRHSpike?.Invoke(this, new SpikeEventArgs($"[RH Spike]: ΔRH={deltaRH:F2}, smer: {direction}"));
                 }
             }
 
@@ -130,7 +107,6 @@ namespace Service
             {
                 string direction = light < lowerBoundL ? "ispod očekivane vrednosti" : "iznad očekivane vrednosti";
                 OnWarningRaised?.Invoke(this, new WarningEventArgs($"[OUT OF BOUND WARNING]:\t L={light:F2}, Lmean={lMean:F2}, smer: {direction}"));
-                //OnOutOfBoundWarning?.Invoke(this, new OutOfBoundWarningEventArgs($"OutOfBandWarning: L={light:F2}, Lmean={lMean:F2}, smer: {direction}"));
             }
 
             // --- Zapamti trenutni sample kao prethodni ---
@@ -207,8 +183,7 @@ namespace Service
             }
             catch (FaultException<ValidationFault> ex)
             {
-                //WriteRejactSample(sample, ex.Detail.Message); // belezi u reject CSV
-                //WarningRaise();
+                
                 return new ServiceResponse
                 {
                     ServiceType = ServiceType.NACK,
@@ -218,8 +193,7 @@ namespace Service
             }
             catch (FaultException<DataFormatFault> ex)
             {
-                // WriteRejactSample(sample, ex.Detail.Message);
-                //WarningRaise();
+               
                 return new ServiceResponse
                 {
                     ServiceType = ServiceType.NACK,
@@ -229,8 +203,7 @@ namespace Service
             }
             catch (Exception ex)
             {
-                // WriteRejactSample(sample, ex.Message);
-                //WarningRaise();
+             
                 return new ServiceResponse
                 {
                     ServiceType = ServiceType.NACK,
@@ -240,7 +213,7 @@ namespace Service
             }
         }
 
-        public ServiceResponse StartStession(SessionMetaData metaData)
+        public ServiceResponse StartStession(SessionMetaData meta)
         {
             try
             {
@@ -252,8 +225,13 @@ namespace Service
                 measurementsWriter = new StreamWriter(measurementsPath);
                 rejestSampleWriter = new StreamWriter(rejectsPath);
 
-                measurementsWriter.WriteLine("Volume,RelativeHumidity,AirQuality,LightLevel,DateTime");
-                rejestSampleWriter.WriteLine("Volume,RelativeHumidity,AirQuality,LightLevel,DateTime,Reason rejact");
+                string header = $"{meta.Volume},{meta.RelativeHumidity},{meta.AirQuality},{meta.LightLevel},{meta.DateTime}";
+                string headerRejact = $"{meta.Volume},{meta.RelativeHumidity},{meta.AirQuality},{meta.LightLevel},{meta.DateTime},Reason rejact";
+
+                measurementsWriter.WriteLine(header);
+                rejestSampleWriter.WriteLine(headerRejact);
+
+   
 
 
                 StartTransfer();
@@ -296,11 +274,7 @@ namespace Service
            
                 rejestSampleWriter?.WriteLine($"{sample?.Volume.ToString(CultureInfo.InvariantCulture)},{sample?.RelativeHumidity.ToString(CultureInfo.InvariantCulture)},{sample?.AirQuality.ToString(CultureInfo.InvariantCulture)},{sample?.LightLevel.ToString(CultureInfo.InvariantCulture)},{sample?.DateTime.ToString("dd-MM-yyyy HH:mm:ss")},{reason}");
                 rejestSampleWriter?.Flush();
-           
-            
 
-            /*rejestSampleWriter.WriteLine(line);
-            rejestSampleWriter.Flush();*/
         }
         private void ValidateSensorSampleData(SensorSample sample)
         {
